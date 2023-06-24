@@ -1,16 +1,42 @@
 'use client'
-import Image from 'next/image'
 import {
   CreateTodoForm,
   CreateTodoInput,
   CreateTodoHeader,
   Line,
   CreateTodoTextArea,
+  InputFavoriteWrapper,
+  CreateTodoInputFavorite,
+  AddNote,
 } from './styles'
-import startFavorite from '@/assets/images/starFavorite.svg'
 import { useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { FavoriteIcon } from '../FavoriteIcon'
+
+const creteNoteSchema = z.object({
+  content: z.string().nonempty('Conteúdo é obrigatório'),
+  title: z.string().nonempty('Titulo é obrigatório'),
+  isFavorite: z.boolean(),
+})
+
+type NoteFormData = z.infer<typeof creteNoteSchema>
+
 export const CreateTodo = () => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<NoteFormData>({
+    resolver: zodResolver(creteNoteSchema),
+  })
+  const { ref, ...rest } = register('content')
+  console.log(errors)
+  const onSubmit = (data: NoteFormData) => {
+    console.log(data)
+  }
 
   const handleChange = () => {
     if (textAreaRef.current) {
@@ -21,40 +47,34 @@ export const CreateTodo = () => {
   }
 
   return (
-    <CreateTodoForm>
+    <CreateTodoForm onSubmit={handleSubmit(onSubmit)}>
       <CreateTodoHeader>
-        <CreateTodoInput placeholder="Titulo" />
-        <Image src={startFavorite} alt="Icone favorito" />
+        <CreateTodoInput
+          {...register('title')}
+          isError={Boolean(errors.title)}
+          placeholder={errors.title ? errors.title?.message : 'Titulo'}
+        />
+        <InputFavoriteWrapper>
+          <CreateTodoInputFavorite
+            type="checkbox"
+            {...register('isFavorite')}
+          />
+          <FavoriteIcon />
+        </InputFavoriteWrapper>
       </CreateTodoHeader>
       <Line />
-
       <CreateTodoTextArea
-        name="todoList"
-        placeholder="Criar nota..."
-        ref={textAreaRef}
-        onChange={handleChange}
-        // onChange={onChangeTextAreaNew}
-        // value={textAreaNew}
-      ></CreateTodoTextArea>
-      {/* <CardHeader>
-          <Title
-            onChange={onChangeTitleNew}
-            value={titleNew}
-            placeholder="Titulo"
-          />
-          <div onClick={onChangeChecked}>
-            <Image
-              src={isFavorited ? favoriteCheked : favoriteNoCheked}
-              alt=""
-            />
-          </div>
-        </CardHeader>
-        <TextAreaNew
-          name="todoList"
-          placeholder="Criar nota..."
-          onChange={onChangeTextAreaNew}
-          value={textAreaNew}
-        ></TextAreaNew> */}
+        {...rest}
+        ref={(e) => {
+          ref(e)
+          textAreaRef.current = e
+        }}
+        spellCheck="false"
+        placeholder={errors.content ? errors.content?.message : 'Criar nota...'}
+        isError={Boolean(errors.content)}
+        onInput={handleChange}
+      />
+      {isValid && <AddNote type="submit">Adicionar</AddNote>}
     </CreateTodoForm>
   )
 }

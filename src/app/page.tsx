@@ -13,9 +13,6 @@ export default function Home() {
         <CreateTodo />
         <CardContainer>
           <CardTodo />
-          <CardTodo />
-          <CardTodo />
-          <CardTodo />
         </CardContainer>
       </MainContainer>
     </>

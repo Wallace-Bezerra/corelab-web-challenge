@@ -1,5 +1,5 @@
 'use client'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const CreateTodoForm = styled.form`
   margin: 0 auto;
@@ -21,7 +21,11 @@ export const CreateTodoForm = styled.form`
     border-radius: 25px;
   }
 `
-export const CreateTodoInput = styled.input`
+
+type CreateTodoInputProps = {
+  isError: boolean
+}
+export const CreateTodoInput = styled.input<CreateTodoInputProps>`
   background-color: red;
   width: 100%;
   color: #333;
@@ -30,7 +34,7 @@ export const CreateTodoInput = styled.input`
   font-size: 14.2px;
   font-weight: 700;
   ::placeholder {
-    color: #333;
+    color: ${({ isError }) => (isError ? 'red' : '#333')};
   }
   :focus-within {
     outline: none;
@@ -45,6 +49,31 @@ export const CreateTodoHeader = styled.div`
     cursor: pointer;
   }
 `
+export const InputFavoriteWrapper = styled.div`
+  position: relative;
+  svg {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    pointer-events: auto;
+  }
+`
+export const CreateTodoInputFavorite = styled.input`
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  appearance: none;
+  &:checked + svg {
+    path {
+      transition: all 0.2s;
+      fill: #ffa000;
+      stroke: #ffa000;
+    }
+  }
+`
+
 export const Line = styled.span`
   background-color: #d9d9d9;
   width: 100%;
@@ -53,7 +82,10 @@ export const Line = styled.span`
   left: 0px;
   top: 45px;
 `
-export const CreateTodoTextArea = styled.textarea`
+interface CreateTodoTextAreaProps {
+  isError: boolean
+}
+export const CreateTodoTextArea = styled.textarea<CreateTodoTextAreaProps>`
   padding-top: 16px;
   border: none;
   resize: none;
@@ -61,5 +93,23 @@ export const CreateTodoTextArea = styled.textarea`
   height: 100%;
   :focus-within {
     outline: none;
+  }
+  ::placeholder {
+    ${({ isError }) =>
+      isError &&
+      css`
+        color: red;
+      `}
+  }
+`
+export const AddNote = styled.button`
+  background-color: transparent;
+  padding: 8px 12px;
+  transition: background 0.4s ease;
+  border-radius: 3px;
+  cursor: pointer;
+  float: right;
+  &:hover {
+    background-color: #f1f1f1;
   }
 `
