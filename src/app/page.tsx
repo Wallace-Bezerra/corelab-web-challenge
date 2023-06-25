@@ -1,8 +1,8 @@
-import { CardTodo } from '@/components/CardTodo'
 import { CreateTodo } from '@/components/CreateTodo'
 import { Header } from '@/components/Header'
 import { GlobalStyle } from '@/styles/GlobalStyle'
-import { CardContainer, MainContainer } from './styles'
+import { MainContainer } from './styles'
+import { ListCardTodos } from '@/components/ListCardTodos'
 
 export default function Home() {
   return (
@@ -11,9 +11,7 @@ export default function Home() {
       <Header />
       <MainContainer>
         <CreateTodo />
-        <CardContainer>
-          <CardTodo />
-        </CardContainer>
+        <ListCardTodos />
       </MainContainer>
     </>
   )

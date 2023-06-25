@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ColorOption, ContainerColorPicker } from './styles'
 
 interface ColorPickerProps {
-  handleColorNote: (color: string) => void
+  handleColorNote: (
+    color: string,
+    setColor: (color: string) => void,
+  ) => Promise<void>
+  setIsOpenColorPicker: (bool: boolean) => void
+  setColor: (color: string) => void
 }
 const colors = [
   '#BAE2FF',
@@ -18,14 +23,37 @@ const colors = [
   '#979797',
   '#A99A7C',
 ]
-export const ColorPicker = ({ handleColorNote }: ColorPickerProps) => {
+export const ColorPicker = ({
+  setColor,
+  handleColorNote,
+  setIsOpenColorPicker,
+}: ColorPickerProps) => {
+  const colorOptionsRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const clickOutside = (event: any) => {
+      if (
+        colorOptionsRef.current &&
+        !colorOptionsRef.current.contains(event.target)
+      ) {
+        setIsOpenColorPicker(false)
+      }
+    }
+    document.addEventListener('click', clickOutside)
+    return () => {
+      document.removeEventListener('click', clickOutside)
+    }
+  }, [setIsOpenColorPicker])
   return (
-    <ContainerColorPicker>
+    <ContainerColorPicker ref={colorOptionsRef}>
       {colors.map((color, index) => {
         return (
           <ColorOption
             key={index}
-            onClick={() => handleColorNote(color)}
+            onClick={() => {
+              setIsOpenColorPicker(false)
+              handleColorNote(color, setColor)
+            }}
             color={color}
           />
         )

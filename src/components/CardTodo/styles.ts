@@ -5,7 +5,7 @@ import styled from 'styled-components'
 type ContainerCardTodoProps = {
   color: string
 }
-export const ContainerCardTodo = styled.div<ContainerCardTodoProps>`
+export const ContainerCardTodo = styled.form<ContainerCardTodoProps>`
   max-width: 530px;
   width: 100%;
   min-height: 440px;
