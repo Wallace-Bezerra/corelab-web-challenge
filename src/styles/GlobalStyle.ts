@@ -1,5 +1,5 @@
 'use client'
-import { inter } from '@/app/layout'
+
 import { createGlobalStyle } from 'styled-components'
 export const GlobalStyle = createGlobalStyle`
 :root {
@@ -20,7 +20,7 @@ body {
 
 }
 textarea{
-    font-family:${inter.style.fontFamily}
+    font-family:inherit;
   }
 
 body {

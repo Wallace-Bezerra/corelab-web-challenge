@@ -14,7 +14,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FavoriteIcon } from '../FavoriteIcon'
-import { api } from '@/lib/api'
+import { useMutation } from 'react-query'
+import { handleCreateNote } from '@/services/notes'
+import { queryClient } from '@/context/QueryContext'
 
 const creteNoteSchema = z.object({
   content: z.string().nonempty('Conteúdo é obrigatório'),
@@ -22,7 +24,7 @@ const creteNoteSchema = z.object({
   isFavorite: z.boolean(),
 })
 
-type CreateNoteFormData = z.infer<typeof creteNoteSchema>
+export type CreateNoteFormData = z.infer<typeof creteNoteSchema>
 
 export const CreateTodo = () => {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -35,10 +37,14 @@ export const CreateTodo = () => {
     resolver: zodResolver(creteNoteSchema),
   })
   const { ref, ...rest } = register('content')
-  console.log(errors)
+  const mutation = useMutation(handleCreateNote, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('notes')
+    },
+  })
+
   const onSubmit = async (data: CreateNoteFormData) => {
-    console.log(data)
-    await api.post('/notes', data)
+    mutation.mutate(data)
     reset()
   }
 

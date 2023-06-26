@@ -1,40 +1,75 @@
 import React, { useEffect, useRef } from 'react'
 import { ColorOption, ContainerColorPicker } from './styles'
+import { Note } from '@/components/ListCardNotes'
+import { handleColorNote } from '@/services/notes'
 
 interface ColorPickerProps {
-  handleColorNote: (
-    color: string,
-    setColor: (color: string) => void,
-  ) => Promise<void>
+  note: Note
   setIsOpenColorPicker: (bool: boolean) => void
   setColor: (color: string) => void
 }
-const colors = [
-  '#BAE2FF',
-  '#B9FFDD',
-  '#FFE8AC',
-  '#FFCAB9',
-  '#F99494',
-  '#9DD6FF',
-  '#ECA1FF',
-  '#DAFF8B',
-  '#FFA285',
-  '#CDCDCD',
-  '#979797',
-  '#A99A7C',
+export const colors = [
+  {
+    color: '#BAE2FF',
+    name: 'azul',
+  },
+  {
+    color: '#B9FFDD',
+    name: 'verde',
+  },
+  {
+    color: '#FFE8AC',
+    name: 'laranja',
+  },
+  {
+    color: '#FFCAB9',
+    name: 'rosa',
+  },
+  {
+    color: '#F99494',
+    name: 'rosa',
+  },
+  {
+    color: '#9DD6FF',
+    name: 'azul',
+  },
+  {
+    color: '#ECA1FF',
+    name: 'rosa',
+  },
+  {
+    color: '#DAFF8B',
+    name: 'verde',
+  },
+  {
+    color: '#FFA285',
+    name: 'laranja',
+  },
+  {
+    color: '#CDCDCD',
+    name: 'cinza',
+  },
+  {
+    color: '#979797',
+    name: 'cinza',
+  },
+  {
+    color: '#A99A7C',
+    name: 'cinza',
+  },
 ]
 export const ColorPicker = ({
-  setColor,
-  handleColorNote,
   setIsOpenColorPicker,
+  setColor,
+  note,
 }: ColorPickerProps) => {
   const colorOptionsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    const clickOutside = (event: any) => {
+    const clickOutside = (event: MouseEvent) => {
       if (
         colorOptionsRef.current &&
-        !colorOptionsRef.current.contains(event.target)
+        !colorOptionsRef.current.contains(event.target as Node)
       ) {
         setIsOpenColorPicker(false)
       }
@@ -46,13 +81,13 @@ export const ColorPicker = ({
   }, [setIsOpenColorPicker])
   return (
     <ContainerColorPicker ref={colorOptionsRef}>
-      {colors.map((color, index) => {
+      {colors.map(({ color }) => {
         return (
           <ColorOption
-            key={index}
+            key={color}
             onClick={() => {
               setIsOpenColorPicker(false)
-              handleColorNote(color, setColor)
+              handleColorNote(color, setColor, note)
             }}
             color={color}
           />

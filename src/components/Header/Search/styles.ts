@@ -17,10 +17,10 @@ export const Input = styled.input`
   border: none;
   width: 100%;
   height: 100%;
-  font-size: 9px;
+  font-size: 14;
   ::placeholder {
     color: #9a9a9a;
-    font-size: 9px;
+    font-size: 14px;
   }
   :focus-visible {
     outline: none;

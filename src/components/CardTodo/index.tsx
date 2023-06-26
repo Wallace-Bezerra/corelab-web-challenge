@@ -9,6 +9,8 @@ import {
   CardTodoTextArea,
   EditColor,
   EditNote,
+  CardTodoTitle,
+  CardTodoContent,
 } from './styles'
 import {
   CreateTodoInputFavorite,
@@ -22,30 +24,43 @@ import editNote from '@/assets/images/editNote.svg'
 import checkEdit from '@/assets/images/check.svg'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ColorPicker } from './ColorPicker'
-import { Note } from '../ListCardTodos'
+import { Note } from '../ListCardNotes'
 import { FavoriteIcon } from '../FavoriteIcon'
-import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { api } from '@/lib/api'
-import { useServiceNotes } from '@/hooks/useServiceNotes'
+import { useForm } from 'react-hook-form'
+import { useDeleteNote } from '@/hooks/useDeleteNote'
+import { useUpdateFavorite } from '@/hooks/useUpdateFavorite'
+import { queryClient } from '@/context/QueryContext'
+import { useMutation } from 'react-query'
+import { handleUpdateNote } from '@/services/notes'
 
 interface CardTodoProps {
   note: Note
 }
+
+const editNoteSchema = z.object({
+  content: z.string().nonempty('Conteúdo é obrigatório'),
+  title: z.string().nonempty('Titulo é obrigatório'),
+  isFavorite: z.boolean(),
+})
+export type EditNoteFormData = z.infer<typeof editNoteSchema>
+
 export const CardTodo = ({ note }: CardTodoProps) => {
   const [isOpenColorPicker, setIsOpenColorPicker] = useState(false)
   const [isEditNote, setIsEditNote] = useState(false)
   const [color, setColor] = useState(note.color)
-  const { handleColorNote, handleDeleteNote, handleIsFavorite } =
-    useServiceNotes(note)
+  const deleteNote = useDeleteNote(note.id)
+  const updateFavorite = useUpdateFavorite(note)
 
-  const editNoteSchema = z.object({
-    content: z.string().nonempty('Conteúdo é obrigatório'),
-    title: z.string().nonempty('Titulo é obrigatório'),
-    isFavorite: z.boolean(),
-  })
-
-  type EditNoteFormData = z.infer<typeof editNoteSchema>
+  const mutation = useMutation(
+    (data: EditNoteFormData) => handleUpdateNote(data, note.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('notes')
+        setIsEditNote(false)
+      },
+    },
+  )
 
   const {
     register,
@@ -54,12 +69,10 @@ export const CardTodo = ({ note }: CardTodoProps) => {
   } = useForm<EditNoteFormData>({
     resolver: zodResolver(editNoteSchema),
   })
-  console.log(errors)
 
   const onSubmit = async (data: EditNoteFormData) => {
     const dataEdit = { ...data, color }
-    await api.patch(`/notes/${note.id}`, dataEdit)
-    setIsEditNote(false)
+    mutation.mutate(dataEdit)
   }
 
   return (
@@ -76,13 +89,13 @@ export const CardTodo = ({ note }: CardTodoProps) => {
             {...register('title')}
           />
         )}
-        {!isEditNote && <p>{note.title}</p>}
+        {!isEditNote && <CardTodoTitle>{note.title}</CardTodoTitle>}
         <InputFavoriteWrapper>
           <CreateTodoInputFavorite
             type="checkbox"
             defaultChecked={note.isFavorite}
             {...register('isFavorite')}
-            onClick={() => handleIsFavorite(note.isFavorite)}
+            onClick={() => updateFavorite.mutate()}
           />
           <FavoriteIcon />
         </InputFavoriteWrapper>
@@ -92,15 +105,13 @@ export const CardTodo = ({ note }: CardTodoProps) => {
         <CardTodoTextArea
           {...register('content')}
           placeholder={
-            errors.content ? errors.content?.message : 'Criar nota...'
+            errors.content ? errors.content?.message : 'Digite sua nota'
           }
           defaultValue={note.content}
           spellCheck="false"
         />
       )}
-      {!isEditNote && (
-        <p style={{ flexGrow: '1', paddingTop: '20px' }}>{note.content}</p>
-      )}
+      {!isEditNote && <CardTodoContent>{note.content}</CardTodoContent>}
 
       <CardTodoFooter>
         <EditOptions>
@@ -119,7 +130,7 @@ export const CardTodo = ({ note }: CardTodoProps) => {
           {isOpenColorPicker && (
             <ColorPicker
               setColor={setColor}
-              handleColorNote={handleColorNote}
+              note={note}
               setIsOpenColorPicker={setIsOpenColorPicker}
             />
           )}
@@ -128,7 +139,12 @@ export const CardTodo = ({ note }: CardTodoProps) => {
           {isValid && isEditNote && (
             <Image src={checkEdit} onClick={handleSubmit(onSubmit)} alt="" />
           )}
-          <Image src={closeNote} width={16} onClick={handleDeleteNote} alt="" />
+          <Image
+            src={closeNote}
+            width={16}
+            onClick={() => deleteNote.mutate()}
+            alt=""
+          />
         </EditOptions>
       </CardTodoFooter>
     </ContainerCardTodo>

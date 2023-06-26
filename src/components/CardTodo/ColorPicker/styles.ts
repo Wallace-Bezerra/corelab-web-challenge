@@ -9,8 +9,6 @@ export const ContainerColorPicker = styled.div`
   border: 1px solid #d9d9d9;
   background-color: #fff;
   box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.25);
-  /* max-width: 286.939px; */
-  /* width: 100%; */
   position: absolute;
   z-index: 5;
   bottom: -55px;
@@ -18,7 +16,6 @@ export const ContainerColorPicker = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
-  /* flex-wrap: wrap; */
   padding: 8px 6px;
   gap: 10px;
   @media (max-width: 800px) {

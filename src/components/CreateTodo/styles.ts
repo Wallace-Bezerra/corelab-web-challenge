@@ -3,10 +3,7 @@ import styled, { css } from 'styled-components'
 
 export const CreateTodoForm = styled.form`
   margin: 0 auto;
-  /* left: 50%;
-  top: 75px; */
   z-index: 2;
-  /* transform: translateX(-50%); */
   margin-top: 26px;
   max-width: 530px;
   width: 100%;
@@ -21,7 +18,6 @@ export const CreateTodoForm = styled.form`
     border-radius: 25px;
   }
 `
-
 type CreateTodoInputProps = {
   isError: boolean
 }
@@ -63,7 +59,7 @@ export const CreateTodoInputFavorite = styled.input`
   z-index: 1;
   cursor: pointer;
   height: 20px;
-  width: 20px;
+  width: 22px;
   appearance: none;
   &:checked + svg {
     path {

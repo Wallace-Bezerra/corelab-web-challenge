@@ -6,21 +6,27 @@ type ContainerCardTodoProps = {
   color: string
 }
 export const ContainerCardTodo = styled.form<ContainerCardTodoProps>`
-  max-width: 530px;
+  min-width: 375px;
+  max-width: 800px;
   width: 100%;
   min-height: 440px;
   display: flex;
   flex-direction: column;
   position: relative;
-  /* justify-content: space-between;  */
   border-radius: 3px;
   border: 1px solid #d9d9d9;
   background: ${({ color }) => color || '#fff'};
   box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.25);
   padding: 14px 20px;
   border-radius: 25px;
+  font-size: 14px;
   img {
     cursor: pointer;
+  }
+  @media (max-width: 400px) {
+    max-width: initial;
+    min-width: initial;
+    min-height: 360px;
   }
 `
 
@@ -39,6 +45,7 @@ export const CardTodoInput = styled.input`
   color: #333;
   background: none;
   border: none;
+  font-size: 14px;
   :focus-within {
     outline: none;
   }
@@ -50,11 +57,12 @@ export const CardTodoFooter = styled.footer`
 `
 export const CardTodoTextArea = styled.textarea`
   background-color: inherit;
-  padding-top: 16px;
+  padding-top: 20px;
   border: none;
   resize: none;
   width: 100%;
   height: 100%;
+  font-size: 14px;
   flex-grow: 1;
   :focus-within {
     outline: none;
@@ -91,4 +99,9 @@ export const EditNote = styled.div<EditNoteProps>`
   width: 28.901px;
   height: 28.901px;
   background-color: ${({ isEditNote }) => isEditNote && '#ffe3b3'};
+`
+export const CardTodoTitle = styled.p``
+export const CardTodoContent = styled.p`
+  flex-grow: 1;
+  padding-top: 20px;
 `
