@@ -18,7 +18,8 @@ export const handleColorNote = async (
 }
 
 export const handleDeleteNote = async (id: string) => {
-  await api.delete(`/notes/${id}`)
+  const response = await api.delete(`/notes/${id}`)
+  return response.data
 }
 
 export const handleUpdateNote = async (data: EditNoteFormData, id: string) => {
@@ -26,15 +27,17 @@ export const handleUpdateNote = async (data: EditNoteFormData, id: string) => {
   return response.data
 }
 export const handleCreateNote = async (data: CreateNoteFormData) => {
-  await api.post('/notes', data)
+  const response = await api.post('/notes', data)
+  return response.data
 }
 export const handleIsFavorite = async (note: Note) => {
-  await api.patch(`/notes/${note.id}`, {
+  const response = await api.patch(`/notes/${note.id}`, {
     title: note.title,
     content: note.content,
     isFavorite: !note.isFavorite,
     color: note.color,
   })
+  return response.data
 }
 
 export const fetchNote = async () => {

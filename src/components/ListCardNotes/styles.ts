@@ -1,13 +1,12 @@
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
-export const CardContainer = styled.div`
+export const CardContainer = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
-  justify-items: flex-start;
+  grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
   gap: 35px;
-  transition: all 1s ease;
   @media (max-width: 400px) {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 `
 export const Title = styled.h3`

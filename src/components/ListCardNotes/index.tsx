@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { fetchNote } from '@/services/notes'
 import { useSearchStore } from '@/store/searchStore'
 import { useFilterColors } from '@/hooks/useFilterColors'
+import { Loading } from '../Loading'
 
 export interface Note {
   id: string
@@ -15,7 +16,7 @@ export interface Note {
   createdAt: Date
 }
 export const ListCardNotes = () => {
-  const { data: notes } = useQuery('notes', fetchNote)
+  const { data: notes, isLoading } = useQuery('notes', fetchNote)
   const searchValue = useSearchStore((store) => store.searchValue)
   const colorsFilter = useFilterColors()
 
@@ -29,26 +30,31 @@ export const ListCardNotes = () => {
 
   return (
     <>
-      <div>
-        <Title>Favoritos</Title>
-        <CardContainer>
-          {filteredNotes
-            ?.filter((item) => item.isFavorite)
-            .map((note) => {
-              return <CardTodo key={note.id} note={note} />
-            })}
-        </CardContainer>
-      </div>
-      <div>
-        <Title>Outros</Title>
-        <CardContainer>
-          {filteredNotes
-            ?.filter((item) => !item.isFavorite)
-            .map((note) => {
-              return <CardTodo note={note} key={note.id} />
-            })}
-        </CardContainer>
-      </div>
+      {isLoading && <Loading />}
+      {!isLoading && (
+        <>
+          <div>
+            <Title>Favoritos</Title>
+            <CardContainer>
+              {filteredNotes
+                ?.filter((item) => item.isFavorite)
+                .map((note) => {
+                  return <CardTodo key={note.id} note={note} />
+                })}
+            </CardContainer>
+          </div>
+          <div>
+            <Title>Outros</Title>
+            <CardContainer>
+              {filteredNotes
+                ?.filter((item) => !item.isFavorite)
+                .map((note) => {
+                  return <CardTodo note={note} key={note.id} />
+                })}
+            </CardContainer>
+          </div>
+        </>
+      )}
     </>
   )
 }

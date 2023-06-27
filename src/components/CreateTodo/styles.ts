@@ -1,4 +1,5 @@
 'use client'
+import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
 export const CreateTodoForm = styled.form`
@@ -7,7 +8,6 @@ export const CreateTodoForm = styled.form`
   margin-top: 26px;
   max-width: 530px;
   width: 100%;
-  min-height: 100px;
   position: relative;
   border-radius: 3px;
   border: 1px solid #d9d9d9;
@@ -81,12 +81,12 @@ export const Line = styled.span`
 interface CreateTodoTextAreaProps {
   isError: boolean
 }
+
 export const CreateTodoTextArea = styled.textarea<CreateTodoTextAreaProps>`
   padding-top: 16px;
   border: none;
   resize: none;
   width: 100%;
-  height: 100%;
   :focus-within {
     outline: none;
   }
@@ -98,7 +98,7 @@ export const CreateTodoTextArea = styled.textarea<CreateTodoTextAreaProps>`
       `}
   }
 `
-export const AddNote = styled.button`
+export const AddNote = styled(motion.button)`
   background-color: transparent;
   padding: 8px 12px;
   transition: background 0.4s ease;

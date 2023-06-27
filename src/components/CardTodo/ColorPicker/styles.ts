@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-
+import { motion } from 'framer-motion'
 type ColorOptionProps = {
   color: string
 }
 
-export const ContainerColorPicker = styled.div`
+export const ContainerColorPicker = styled(motion.div)`
   border-radius: 9px;
   border: 1px solid #d9d9d9;
   background-color: #fff;
@@ -18,7 +18,7 @@ export const ContainerColorPicker = styled.div`
   display: flex;
   padding: 8px 6px;
   gap: 10px;
-  @media (max-width: 800px) {
+  @media (max-width: 1200px) {
     width: 300px;
     flex-wrap: wrap;
     bottom: -100px;

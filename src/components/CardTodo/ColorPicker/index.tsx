@@ -65,7 +65,22 @@ export const ColorPicker = ({
 }: ColorPickerProps) => {
   const colorOptionsRef = useRef<HTMLDivElement | null>(null)
 
+  const resizeColoPicker = () => {
+    if (colorOptionsRef.current) {
+      const retangulo = colorOptionsRef.current.getBoundingClientRect()
+      console.log(retangulo)
+      const larguraJanela = window.innerWidth
+      let margemEsquerda = '10px'
+      if (retangulo.right >= larguraJanela) {
+        margemEsquerda = `${retangulo.width - 900}px`
+      }
+      colorOptionsRef.current.style.marginLeft = margemEsquerda
+    }
+  }
   useEffect(() => {
+    resizeColoPicker()
+    window.addEventListener('resize', resizeColoPicker)
+
     const clickOutside = (event: MouseEvent) => {
       if (
         colorOptionsRef.current &&
@@ -76,11 +91,17 @@ export const ColorPicker = ({
     }
     document.addEventListener('click', clickOutside)
     return () => {
+      window.removeEventListener('resize', resizeColoPicker)
       document.removeEventListener('click', clickOutside)
     }
   }, [setIsOpenColorPicker])
   return (
-    <ContainerColorPicker ref={colorOptionsRef}>
+    <ContainerColorPicker
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 5, opacity: 0 }}
+      ref={colorOptionsRef}
+    >
       {colors.map(({ color }) => {
         return (
           <ColorOption

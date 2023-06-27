@@ -27,12 +27,14 @@ import { ColorPicker } from './ColorPicker'
 import { Note } from '../ListCardNotes'
 import { FavoriteIcon } from '../FavoriteIcon'
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { useDeleteNote } from '@/hooks/useDeleteNote'
 import { useUpdateFavorite } from '@/hooks/useUpdateFavorite'
 import { queryClient } from '@/context/QueryContext'
 import { useMutation } from 'react-query'
 import { handleUpdateNote } from '@/services/notes'
+import { AnimatePresence, motion } from 'framer-motion'
+import { setTimeout } from 'timers'
 
 interface CardTodoProps {
   note: Note
@@ -57,7 +59,9 @@ export const CardTodo = ({ note }: CardTodoProps) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('notes')
-        setIsEditNote(false)
+        setTimeout(() => {
+          setIsEditNote(false)
+        }, 1000)
       },
     },
   )
@@ -70,16 +74,23 @@ export const CardTodo = ({ note }: CardTodoProps) => {
     resolver: zodResolver(editNoteSchema),
   })
 
-  const onSubmit = async (data: EditNoteFormData) => {
+  const onSubmit: SubmitHandler<EditNoteFormData> = async (data) => {
     const dataEdit = { ...data, color }
     mutation.mutate(dataEdit)
   }
 
   return (
     <ContainerCardTodo
-      onSubmit={handleSubmit(onSubmit)}
       key={note.id}
       color={color}
+      onSubmit={handleSubmit(onSubmit)}
+      layout
+      transition={{
+        layout: { duration: 0.4 },
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
     >
       <CardTodoHeader>
         {isEditNote && (
@@ -89,6 +100,7 @@ export const CardTodo = ({ note }: CardTodoProps) => {
             {...register('title')}
           />
         )}
+
         {!isEditNote && <CardTodoTitle>{note.title}</CardTodoTitle>}
         <InputFavoriteWrapper>
           <CreateTodoInputFavorite
@@ -101,18 +113,23 @@ export const CardTodo = ({ note }: CardTodoProps) => {
         </InputFavoriteWrapper>
         <Line />
       </CardTodoHeader>
-      {isEditNote && (
-        <CardTodoTextArea
-          {...register('content')}
-          placeholder={
-            errors.content ? errors.content?.message : 'Digite sua nota'
-          }
-          defaultValue={note.content}
-          spellCheck="false"
-        />
-      )}
-      {!isEditNote && <CardTodoContent>{note.content}</CardTodoContent>}
+      <AnimatePresence>
+        {isEditNote && (
+          <CardTodoTextArea
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 30 }}
+            {...register('content')}
+            placeholder={
+              errors.content ? errors.content?.message : 'Digite sua nota'
+            }
+            defaultValue={note.content}
+            spellCheck="false"
+          />
+        )}
 
+        {!isEditNote && <CardTodoContent>{note.content}</CardTodoContent>}
+      </AnimatePresence>
       <CardTodoFooter>
         <EditOptions>
           <EditNote
@@ -127,18 +144,33 @@ export const CardTodo = ({ note }: CardTodoProps) => {
           >
             <Image src={colorEdit} alt="" />
           </EditColor>
-          {isOpenColorPicker && (
-            <ColorPicker
-              setColor={setColor}
-              note={note}
-              setIsOpenColorPicker={setIsOpenColorPicker}
-            />
-          )}
+          <AnimatePresence>
+            {isOpenColorPicker && (
+              <ColorPicker
+                setColor={setColor}
+                note={note}
+                setIsOpenColorPicker={setIsOpenColorPicker}
+              />
+            )}
+          </AnimatePresence>
         </EditOptions>
         <EditOptions>
-          {isValid && isEditNote && (
-            <Image src={checkEdit} onClick={handleSubmit(onSubmit)} alt="" />
-          )}
+          <AnimatePresence>
+            {isValid && isEditNote && (
+              <motion.div
+                initial={{ y: 10 }}
+                animate={{ y: 0 }}
+                exit={{ y: 10, opacity: 0 }}
+              >
+                <Image
+                  src={checkEdit}
+                  width={20}
+                  onClick={handleSubmit(onSubmit)}
+                  alt=""
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
           <Image
             src={closeNote}
             width={16}

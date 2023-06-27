@@ -1,11 +1,11 @@
 'use client'
-
+import { motion } from 'framer-motion'
 import styled from 'styled-components'
 
 type ContainerCardTodoProps = {
   color: string
 }
-export const ContainerCardTodo = styled.form<ContainerCardTodoProps>`
+export const ContainerCardTodo = styled(motion.form)<ContainerCardTodoProps>`
   min-width: 375px;
   max-width: 800px;
   width: 100%;
@@ -16,6 +16,7 @@ export const ContainerCardTodo = styled.form<ContainerCardTodoProps>`
   border-radius: 3px;
   border: 1px solid #d9d9d9;
   background: ${({ color }) => color || '#fff'};
+  transition: background 0.5s ease;
   box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.25);
   padding: 14px 20px;
   border-radius: 25px;
@@ -39,7 +40,7 @@ export const CardTodoHeader = styled.header`
     cursor: pointer;
   }
 `
-export const CardTodoInput = styled.input`
+export const CardTodoInput = styled(motion.input)`
   background-color: red;
   width: 100%;
   color: #333;
@@ -55,7 +56,7 @@ export const CardTodoFooter = styled.footer`
   align-items: center;
   justify-content: space-between;
 `
-export const CardTodoTextArea = styled.textarea`
+export const CardTodoTextArea = styled(motion.textarea)`
   background-color: inherit;
   padding-top: 20px;
   border: none;
@@ -86,6 +87,10 @@ export const EditColor = styled.div<EditColorProps>`
   width: 28.901px;
   height: 28.901px;
   background-color: ${({ isEditColor }) => isEditColor && '#ffe3b3'};
+  transition: background-color 0.4s ease;
+  :hover {
+    background-color: ${({ isEditColor }) => !isEditColor && '#E8E8E8'};
+  }
 `
 
 type EditNoteProps = {
@@ -99,9 +104,13 @@ export const EditNote = styled.div<EditNoteProps>`
   width: 28.901px;
   height: 28.901px;
   background-color: ${({ isEditNote }) => isEditNote && '#ffe3b3'};
+  transition: background-color 0.4s ease;
+  :hover {
+    background-color: ${({ isEditNote }) => !isEditNote && '#E8E8E8'};
+  }
 `
 export const CardTodoTitle = styled.p``
-export const CardTodoContent = styled.p`
+export const CardTodoContent = styled(motion.p)`
   flex-grow: 1;
   padding-top: 20px;
 `

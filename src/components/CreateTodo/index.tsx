@@ -9,8 +9,9 @@ import {
   CreateTodoInputFavorite,
   AddNote,
 } from './styles'
+import { AnimatePresence } from 'framer-motion'
 import { useRef } from 'react'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { FavoriteIcon } from '../FavoriteIcon'
@@ -43,7 +44,7 @@ export const CreateTodo = () => {
     },
   })
 
-  const onSubmit = async (data: CreateNoteFormData) => {
+  const onSubmit: SubmitHandler<CreateNoteFormData> = async (data) => {
     mutation.mutate(data)
     reset()
   }
@@ -84,7 +85,19 @@ export const CreateTodo = () => {
         isError={Boolean(errors.content)}
         onInput={handleChange}
       />
-      {isValid && <AddNote type="submit">Adicionar</AddNote>}
+      <AnimatePresence>
+        {isValid && (
+          <AddNote
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 10, opacity: 0 }}
+            transition={{ stiffness: 20 }}
+            type="submit"
+          >
+            Adicionar
+          </AddNote>
+        )}
+      </AnimatePresence>
     </CreateTodoForm>
   )
 }
