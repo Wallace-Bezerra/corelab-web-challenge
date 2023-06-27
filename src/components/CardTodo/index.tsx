@@ -61,7 +61,7 @@ export const CardTodo = ({ note }: CardTodoProps) => {
         queryClient.invalidateQueries('notes')
         setTimeout(() => {
           setIsEditNote(false)
-        }, 1000)
+        }, 200)
       },
     },
   )

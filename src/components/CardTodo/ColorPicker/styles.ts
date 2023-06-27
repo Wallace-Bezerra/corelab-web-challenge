@@ -23,6 +23,13 @@ export const ContainerColorPicker = styled(motion.div)`
     flex-wrap: wrap;
     bottom: -100px;
   }
+  @media (max-width: 400px) {
+    left: 0px;
+  }
+  @media (max-width: 350px) {
+    width: 220px;
+    bottom: -150px;
+  }
 `
 export const ColorOption = styled.div<ColorOptionProps>`
   width: 36.708px;

@@ -67,14 +67,13 @@ export const ColorPicker = ({
 
   const resizeColoPicker = () => {
     if (colorOptionsRef.current) {
-      const retangulo = colorOptionsRef.current.getBoundingClientRect()
-      console.log(retangulo)
-      const larguraJanela = window.innerWidth
-      let margemEsquerda = '10px'
-      if (retangulo.right >= larguraJanela) {
-        margemEsquerda = `${retangulo.width - 900}px`
+      const colorOptions = colorOptionsRef.current.getBoundingClientRect()
+      const widthWindow = window.innerWidth
+      let marginLeft = '10px'
+      if (colorOptions.right >= widthWindow) {
+        marginLeft = `${colorOptions.width - 900}px`
       }
-      colorOptionsRef.current.style.marginLeft = margemEsquerda
+      colorOptionsRef.current.style.marginLeft = marginLeft
     }
   }
   useEffect(() => {
